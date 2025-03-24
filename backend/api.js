@@ -6,6 +6,9 @@ import { HfInference } from "@huggingface/inference";
 
 dotenv.config();
 
+console.log("PINECONE_API_KEY:", dotenv, process.env.PINECONE_API_KEY);
+
+
 const app = express();
 app.use(cors());
 app.use(express.json());
