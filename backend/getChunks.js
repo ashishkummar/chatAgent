@@ -90,7 +90,7 @@ async function generateAnswer(query) {
   try {
     
     
-    const userQuery = "tell me about Multiple Video Support  avalibity ";  // ask here ------------ 🦸
+    const userQuery = "can i use Location Map in VDX Advanced?";  // ask here ------------ 🦸
 
 
     await generateAnswer(userQuery);
