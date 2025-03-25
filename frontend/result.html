@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat History</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 60%;
+            margin: auto;
+        }
+        h2 {
+            color: #333;
+        }
+        .chat-item {
+            background: #e9ecef;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .question {
+            font-weight: bold;
+        }
+        .answer {
+            margin-top: 5px;
+        }
+        .feedback {
+            font-style: italic;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Chat History</h2>
+        <div id="chatHistory"></div>
+    </div>
+
+    <script>
+        // 🔥 Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDy4RVmsDZjzIPlRap66S7486xP74DwnrE",
+            authDomain: "chat-agent-2eab2.firebaseapp.com",
+            projectId: "chat-agent-2eab2",
+            storageBucket: "chat-agent-2eab2.firebasestorage.app",
+            messagingSenderId: "1032795279534",
+            appId: "1:1032795279534:web:68b1792fee7790cf7c5d3f"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to load chat history
+        async function loadChatHistory() {
+            const chatHistoryDiv = document.getElementById("chatHistory");
+
+            try {
+                const querySnapshot = await db.collection("chat_history").orderBy("timestamp", "desc").get();
+                chatHistoryDiv.innerHTML = "";
+
+                if (querySnapshot.empty) {
+                    chatHistoryDiv.innerHTML = "<p>No chat history found.</p>";
+                    return;
+                }
+
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const question = data.question || "No question";
+                    const answer = data.answer || "No answer";
+                    const feedback = data.feedback ? `Feedback: ${data.feedback}` : "Feedback: Not provided";
+
+                    const chatItem = `
+                        <div class="chat-item">
+                            <div class="question">Q: ${question}</div>
+                            <div class="answer">A: ${answer}</div>
+                            <div class="feedback">${feedback}</div>
+                        </div>
+                    `;
+                    chatHistoryDiv.innerHTML += chatItem;
+                });
+            } catch (error) {
+                console.error("Error loading chat history:", error);
+                chatHistoryDiv.innerHTML = "<p>Error loading chat history.</p>";
+            }
+        }
+
+        // Load chat history when page loads
+        window.onload = loadChatHistory;
+    </script>
+
+</body>
+</html>
